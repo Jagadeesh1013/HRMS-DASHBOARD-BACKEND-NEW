@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "gems_transactions")
+@Table(name = "hrms_status_update", schema = "hrms_backup")
 public class GemsDashboardEntity {
 
 	@Id

@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "gpf_transactions")
+@Table(name = "employee_nominee_details", schema = "hrms_backup")
 public class GpfDashboardEntity {
 
 	@Id

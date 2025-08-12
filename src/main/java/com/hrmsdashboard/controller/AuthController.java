@@ -15,7 +15,7 @@ import com.hrmsdashboard.service.AuthService;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
 
 	@Autowired

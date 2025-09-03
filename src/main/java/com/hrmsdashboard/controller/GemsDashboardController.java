@@ -1,8 +1,9 @@
 package com.hrmsdashboard.controller;
 
 import java.time.LocalDate;
-import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,26 +29,34 @@ public class GemsDashboardController {
 	}
 
 	@GetMapping("/stats")
-    public ResponseEntity<StatusCounts> getDashboardStats(
-            @RequestParam(required = false) String geNumber,
-            @RequestParam(required = false) String eventName,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
+	public ResponseEntity<StatusCounts> getDashboardStats(@RequestParam(required = false) String geNumber,
+			@RequestParam(required = false) String eventName,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
 
-        StatusCounts stats = dashboardService.getDashboardStats(geNumber, eventName, fromDate, toDate);
-        return ResponseEntity.ok(stats);
-    }
+		StatusCounts stats = dashboardService.getDashboardStats(geNumber, eventName, fromDate, toDate);
+		return ResponseEntity.ok(stats);
+	}
 
 	@GetMapping("/transactions/{type}")
-	public ResponseEntity<List<GemsTransaction>> getDashboardDetails(
+	public ResponseEntity<Page<GemsTransaction>> getDashboardDetails(
 	        @PathVariable String type,
 	        @RequestParam(required = false) String geNumber,
 	        @RequestParam(required = false) String eventName,
 	        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
-	        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
+	        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+	        @RequestParam(defaultValue = "0") int page,
+	        @RequestParam(defaultValue = "10") int size) {
 
-	    List<GemsTransaction> data = dashboardService.getDashboardDetails(type, geNumber, eventName, fromDate, toDate);
+		PageRequest pageble = PageRequest.of(page, size);
+	    Page<GemsTransaction> data = dashboardService.getDashboardDetails(type, geNumber, eventName, fromDate, toDate, pageble);
 	    return ResponseEntity.ok(data);
 	}
 
+
+	@GetMapping("/triggerGems")
+	public String triggerGems(@RequestParam(required = false) String geNumber,
+			@RequestParam(required = false) String month, @RequestParam(required = false) String dbStatus) {
+		return dashboardService.callGemsApi(geNumber, month, dbStatus);
+	}
 }
